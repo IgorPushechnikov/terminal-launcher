@@ -22,11 +22,11 @@ jobs:
           
       - name: Install dependencies
         run: npm install
-        shell: bash
+        shell: cmd
         
       - name: Build Electron app
         run: npm run electron:build:win
-        shell: bash
+        shell: cmd
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
