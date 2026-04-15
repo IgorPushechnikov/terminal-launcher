@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: '20'
           
+      - name: Install setuptools (fix Python 3.12+ distutils issue)
+        run: pip install setuptools
+        
       - name: Install dependencies
         run: npm install
         
@@ -50,6 +53,9 @@ jobs:
         with:
           node-version: '20'
           
+      - name: Install setuptools (fix Python 3.12+ distutils issue)
+        run: pip install setuptools
+        
       - name: Install dependencies
         run: npm install
         
