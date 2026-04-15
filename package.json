@@ -57,6 +57,9 @@
     "vue-tsc": "^3.2.6",
     "wait-on": "^8.0.0"
   },
+  "overrides": {
+    "node-gyp": "^11.0.0"
+  },
   "build": {
     "appId": "com.terminal.launcher",
     "productName": "Terminal Launcher",
