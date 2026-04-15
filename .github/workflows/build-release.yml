@@ -2,9 +2,11 @@ name: Build & Release
 
 on:
   push:
+    branches:
+      - main  # Автоматическая сборка при push в main
     tags:
-      - 'v*'  # Trigger on version tags like v2.0.0
-  workflow_dispatch:  # Allow manual trigger
+      - 'v*'  # Автоматическое создание Release при теге версии
+  workflow_dispatch:  # Ручной запуск
 
 jobs:
   build-windows:
