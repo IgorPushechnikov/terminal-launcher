@@ -48,7 +48,6 @@
     "cross-env": "^10.1.0",
     "electron": "^41.2.0",
     "electron-builder": "^25.1.8",
-    "electron-rebuild": "^3.2.9",
     "jsdom": "^29.0.2",
     "node-gyp": "^11.0.0",
     "typescript": "^5.7.0",
