@@ -1,0 +1,35 @@
+/* Resizable Sidebar */
+.resizable-sidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.resizable-sidebar-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Draggable border - resizable handle */
+.resizable-sidebar-border {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  width: 4px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 1000;
+  transition: background-color 0.2s ease;
+}
+
+/* Visual indicator on hover */
+.resizable-sidebar-border:hover {
+  background-color: rgba(102, 126, 234, 0.3);
+}
+
+/* Active resizing state */
+.resizable-sidebar-border.resizing {
+  background-color: rgba(102, 126, 234, 0.6);
+}

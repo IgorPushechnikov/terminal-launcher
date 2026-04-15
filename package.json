@@ -1,0 +1,151 @@
+{
+  "name": "terminal-launcher",
+  "version": "2.0.0",
+  "description": "Multi-tab terminal launcher with saved commands - Vue 3 + Vite",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "cross-env ELECTRON_DISABLE_SECURITY_WARNINGS=true vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "electron:build": "vite build && electron-builder",
+    "electron:build:win": "vite build && electron-builder --win",
+    "electron:build:mac": "vite build && electron-builder --mac",
+    "electron:build:linux": "vite build && electron-builder --linux",
+    "electron:build:all": "vite build && electron-builder -mwl",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "test:e2e": "playwright test"
+  },
+  "keywords": [
+    "terminal",
+    "launcher",
+    "electron",
+    "vue"
+  ],
+  "author": "Igor Pushechnikov (Игорь Пушечников) <https://github.com/IgorPushechnikov>",
+  "license": "MIT",
+  "dependencies": {
+    "@tabler/icons-vue": "^3.41.1",
+    "@types/sqlite3": "^3.1.11",
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/addon-search": "^0.15.0",
+    "@xterm/xterm": "^5.5.0",
+    "node-pty": "^1.1.0",
+    "pinia": "^3.0.4",
+    "sqlite3": "^6.0.1",
+    "vue": "^3.5.32",
+    "vue-toastification": "^2.0.0-rc.5",
+    "vuedraggable": "^4.1.0",
+    "yaml": "^2.8.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^22.10.0",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "@vue/test-utils": "^2.4.6",
+    "concurrently": "^9.1.0",
+    "cross-env": "^10.1.0",
+    "electron": "^41.2.0",
+    "electron-builder": "^25.1.8",
+    "electron-rebuild": "^3.2.9",
+    "jsdom": "^29.0.2",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0",
+    "vite-plugin-electron": "^0.29.0",
+    "vitest": "^4.1.4",
+    "vue-tsc": "^3.2.6",
+    "wait-on": "^8.0.0"
+  },
+  "build": {
+    "appId": "com.terminal.launcher",
+    "productName": "Terminal Launcher",
+    "icon": "build/icons/icon.ico",
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/node-pty/**/*",
+      "node_modules/sqlite3/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "requestedExecutionLevel": "requireAdministrator"
+    },
+    "portable": {
+      "artifactName": "Terminal-Launcher-${version}-Portable.exe",
+      "requestExecutionLevel": "user"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Terminal Launcher",
+      "artifactName": "Terminal-Launcher-${version}-Setup.exe",
+      "deleteAppDataOnUninstall": true,
+      "runAfterFinish": true,
+      "installerIcon": "build/icons/icon.ico",
+      "uninstallerIcon": "build/icons/icon.ico",
+      "installerHeaderIcon": "build/icons/icon.ico"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "TerminalEmulator",
+      "icon": "build/icons"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.developer-tools",
+      "icon": "build/icons/icon.icns",
+      "darkModeSupport": true
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      ".terminal-manager/**/*",
+      "build/icons/**/*",
+      "package.json"
+    ]
+  }
+}

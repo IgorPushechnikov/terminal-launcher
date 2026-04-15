@@ -1,0 +1,199 @@
+@import '@xterm/xterm/css/xterm.css';
+
+/* Global styles for Terminal Launcher */
+
+/* Default theme variables (dark theme by default) */
+:root {
+  color-scheme: light dark;
+  
+  /* Brand colors - Purple Violet #6B53E6 palette */
+  --brand-primary: #6B53E6;        /* Base color (shade 8) */
+  --brand-light: #8B73F0;          /* Light variant (shade 6) */
+  --brand-lighter: #A990F5;        /* Lighter variant (shade 4) */
+  --brand-dark: #5A42D1;           /* Dark variant (shade 9) */
+  --brand-hover: #7C62ED;          /* Hover state (shade 7) */
+  
+  /* Background & text colors */
+  --bg-color: #1e1e1e;
+  --bg-secondary: #2a2a2a;
+  --bg-hover: rgba(255, 255, 255, 0.08);
+  --border-color: #404040;
+  --text-color: #e8e8e8;
+  --text-secondary: #b8b8b8;
+  --text-muted: #888888;
+  --input-bg: #2d2d2d;
+}
+
+/* Dark theme */
+[data-theme='dark'] {
+  /* Brand colors */
+  --brand-primary: #6B53E6;
+  --brand-light: #8B73F0;
+  --brand-lighter: #A990F5;
+  --brand-dark: #5A42D1;
+  --brand-hover: #7C62ED;
+  
+  /* Background & text colors */
+  --bg-color: #1e1e1e;
+  --bg-secondary: #2a2a2a;
+  --bg-hover: rgba(255, 255, 255, 0.08);
+  --border-color: #404040;
+  --text-color: #d4d4d4;
+  --text-secondary: #b8b8b8;
+  --text-muted: #888888;
+  --input-bg: #2d2d2d;
+}
+
+/* Light theme */
+[data-theme='light'] {
+  /* Brand colors - same as dark for consistency */
+  --brand-primary: #6B53E6;
+  --brand-light: #8B73F0;
+  --brand-lighter: #A990F5;
+  --brand-dark: #5A42D1;
+  --brand-hover: #7C62ED;
+  
+  /* Background & text colors */
+  --bg-color: #ffffff;
+  --bg-secondary: #e9ecef;
+  --bg-hover: rgba(0, 0, 0, 0.06);
+  --border-color: #dee2e6;
+  --text-color: #212529;
+  --text-secondary: #495057;
+  --text-muted: #868e96;
+  --input-bg: #ffffff;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#app {
+  height: 100vh;
+  width: 100vw;
+}
+
+.terminal-container {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  -webkit-app-region: no-drag !important;
+  user-select: auto !important;
+}
+
+/* Ensure xterm fills its container */
+.terminal-container .xterm {
+  width: 100% !important;
+  height: 100% !important;
+  -webkit-app-region: no-drag !important;
+  user-select: auto !important;
+}
+
+/* Terminal viewport scrollbar */
+.xterm .xterm-viewport {
+  overflow-y: auto !important;
+}
+
+/* Hide resize handle from xterm textarea */
+.xterm textarea {
+  resize: none !important;
+}
+
+/* Custom scrollbar for terminal - Dark theme */
+[data-theme='dark'] .xterm .xterm-viewport::-webkit-scrollbar {
+  width: 10px;
+}
+
+[data-theme='dark'] .xterm .xterm-viewport::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+[data-theme='dark'] .xterm .xterm-viewport::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 5px;
+}
+
+[data-theme='dark'] .xterm .xterm-viewport::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-primary);
+}
+
+/* Custom scrollbar for terminal - Light theme */
+[data-theme='light'] .xterm .xterm-viewport::-webkit-scrollbar {
+  width: 10px;
+}
+
+[data-theme='light'] .xterm .xterm-viewport::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+[data-theme='light'] .xterm .xterm-viewport::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 5px;
+}
+
+[data-theme='light'] .xterm .xterm-viewport::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-primary);
+}
+
+/* Terminal selection highlight */
+[data-theme='dark'] .xterm .xterm-selection div {
+  background-color: rgba(107, 83, 230, 0.3) !important;
+}
+
+[data-theme='light'] .xterm .xterm-selection div {
+  background-color: rgba(107, 83, 230, 0.2) !important;
+}
+
+/* Smooth transitions - only for interactive elements */
+button, a, .icon-btn, input, select, textarea {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+/* Theme transition - ONLY when explicitly toggled via inline style marker */
+[data-theme][style*="--theme-transition"] *,
+[data-theme][style*="--theme-transition"] {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
+}
+
+/* Prevent transition on initial load */
+[data-theme].no-transition,
+[data-theme].no-transition * {
+  transition: none !important;
+}
+
+/* TitleBar hover states for light theme */
+[data-theme='light'] .titlebar-button:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Tab names and panel headers - ensure visibility in both themes */
+.tab-name {
+  color: var(--text-color) !important;
+}
+
+.panel-header h3 {
+  color: var(--text-color) !important;
+}
+
+.command-header h4 {
+  color: var(--text-color) !important;
+}
+
+/* Light theme specific overrides for component text */
+[data-theme='light'] .tab-name,
+[data-theme='light'] .panel-header h3,
+[data-theme='light'] .command-header h4 {
+  color: var(--text-color) !important;
+}

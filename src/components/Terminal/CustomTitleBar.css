@@ -1,0 +1,193 @@
+/* Кастомный TitleBar для Terminal Launcher */
+.custom-titlebar {
+  height: 36px;
+  background: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  -webkit-app-region: drag; /* Позволяет перетаскивать окно */
+  user-select: none;
+  color: var(--text-color);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 9999;
+}
+
+/* Dark theme - remove border to blend with tab bar */
+[data-theme='dark'] .custom-titlebar {
+  border-bottom: none;
+}
+
+.titlebar-left {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  -webkit-app-region: no-drag;
+  padding-left: 12px;
+}
+
+.titlebar-icon {
+  font-size: 18px;
+  margin-right: 8px;
+  color: var(--brand-primary);
+}
+
+/* Dark theme - lighter brand color for better contrast */
+[data-theme='dark'] .titlebar-icon {
+  color: var(--brand-light);
+}
+
+/* Light theme - darker brand color for better contrast */
+[data-theme='light'] .titlebar-icon {
+  color: var(--brand-dark);
+}
+
+.titlebar-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--brand-primary);
+}
+
+/* Dark theme - lighter brand color */
+[data-theme='dark'] .titlebar-title {
+  color: var(--brand-light);
+}
+
+/* Light theme - darker brand color */
+[data-theme='light'] .titlebar-title {
+  color: var(--brand-dark);
+}
+
+.titlebar-drag-region {
+  flex-grow: 1;
+  height: 100%;
+}
+
+.titlebar-controls {
+  display: flex;
+  -webkit-app-region: no-drag;
+  height: 100%;
+}
+
+.titlebar-button {
+  width: 46px;
+  height: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  padding: 0;
+  margin: 0;
+  outline: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.restore-icon {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+}
+
+.restore-back {
+  fill: none;
+}
+
+.restore-front {
+  fill: var(--bg-color);
+}
+
+/* Light theme - use white background for front rectangle */
+[data-theme='light'] .restore-front {
+  fill: var(--bg-color);
+}
+
+/* Ensure SVG icons inherit button color */
+.titlebar-button svg,
+.titlebar-button svg *,
+.titlebar-button svg path,
+.titlebar-button svg line,
+.titlebar-button svg circle,
+.titlebar-button svg rect {
+  stroke: currentColor;
+}
+
+/* Default fill for SVG elements - restore icon needs background fill */
+.titlebar-button svg path {
+  fill: none;
+}
+
+/* Allow inline fill attribute for restore icon background */
+.titlebar-button svg path[fill] {
+  fill: attr(fill);
+}
+
+.titlebar-button:hover {
+  color: var(--brand-primary);
+}
+
+.titlebar-button:hover svg,
+.titlebar-button:hover svg *,
+.titlebar-button:hover svg path,
+.titlebar-button:hover svg line,
+.titlebar-button:hover svg circle,
+.titlebar-button:hover svg rect {
+  stroke: currentColor;
+}
+
+/* Dark theme button hover */
+[data-theme='dark'] .titlebar-button:hover {
+  color: var(--brand-light);
+  background: var(--bg-secondary);
+}
+
+/* Exclude close button from dark theme background */
+[data-theme='dark'] .titlebar-button.close-button:hover {
+  background-color: #e81123;
+  color: white;
+}
+
+/* Light theme button hover - thicker stroke for better visibility */
+[data-theme='light'] .titlebar-button:hover {
+  color: var(--brand-dark);
+  filter: drop-shadow(0 0 4px rgba(107, 83, 230, 0.5));
+}
+
+[data-theme='light'] .titlebar-button:hover svg,
+[data-theme='light'] .titlebar-button:hover svg *,
+[data-theme='light'] .titlebar-button:hover svg path,
+[data-theme='light'] .titlebar-button:hover svg line,
+[data-theme='light'] .titlebar-button:hover svg circle,
+[data-theme='light'] .titlebar-button:hover svg rect {
+  stroke-width: 2.5 !important;
+}
+
+.titlebar-button.close-button:hover {
+  background-color: #e81123; /* Красный цвет для кнопки закрытия */
+  color: white;
+}
+
+/* Language toggle button - smaller width for text */
+.titlebar-button.language-toggle {
+  width: auto;
+  min-width: 40px;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.language-text {
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Help button - highlight on hover */
+.titlebar-button.help-button:hover {
+  color: var(--brand-primary);
+  background: rgba(107, 83, 230, 0.1);
+}

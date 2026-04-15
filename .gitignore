@@ -1,0 +1,66 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+dist/
+dist-electron/
+*.exe
+*.dmg
+*.AppImage
+*.deb
+*.zip
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Internal documentation (не для GitHub)
+Int_docs/
+docs-archive/
+docs-ru/
+docs-archive/I18N_GUIDE.md
+docs-archive/HELP_SYSTEM.md
+
+# Local logs (не для синхронизации)
+Logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Terminal Launcher Workspace (исключаем всё, кроме шаблонов)
+.terminal-manager/
+!.terminal-manager/templates.yaml
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+DOCUMENTATION_MIGRATION.md
+
+# Test coverage
+coverage/
+
+# Playwright
+playwright-report/
+test-results/
+*.mp4
+
+# Vitest
+.vitest/
