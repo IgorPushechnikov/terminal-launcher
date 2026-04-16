@@ -136,9 +136,10 @@ const checkForUpdates = async () => {
       // Таймаут на случай если событие не придёт
       setTimeout(() => {
         if (isChecking.value === false && !checkResult.value) {
+          // Если за 5 сек не пришло событие - обновлений нет
           checkResult.value = {
-            type: 'info',
-            message: t('settings.checkComplete')
+            type: 'success',
+            message: t('settings.noUpdatesAvailable')
           }
           // Скрыть через 5 секунд
           setTimeout(() => {
