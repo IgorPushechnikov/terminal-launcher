@@ -1,0 +1,59 @@
+name: Sync to Mirrors
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:  # Ручной запуск
+
+jobs:
+  sync-to-mirrors:
+    name: Sync to SourceCraft and GitVerse
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Получаем всю историю
+      
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+      
+      - name: Add mirror remotes
+        run: |
+          git remote add sourcecraft https://sourcecraft.dev/ipushechnikov/terminal-launcher.git
+          git remote add gitverse https://gitverse.ru/ipushechnikov/terminal-launcher.git
+      
+      - name: Push to SourceCraft
+        continue-on-error: true
+        env:
+          SOURCECRAFT_TOKEN: ${{ secrets.SOURCECRAFT_TOKEN }}
+        run: |
+          if [ -n "$SOURCECRAFT_TOKEN" ]; then
+            git remote set-url sourcecraft https://ipushechnikov:${SOURCECRAFT_TOKEN}@sourcecraft.dev/ipushechnikov/terminal-launcher.git
+          fi
+          echo "Pushing to SourceCraft..."
+          git push sourcecraft HEAD:main --force
+          echo "✓ Successfully pushed to SourceCraft"
+      
+      - name: Push to GitVerse
+        continue-on-error: true
+        env:
+          GITVERSE_TOKEN: ${{ secrets.GITVERSE_TOKEN }}
+        run: |
+          if [ -n "$GITVERSE_TOKEN" ]; then
+            git remote set-url gitverse https://ipushechnikov:${GITVERSE_TOKEN}@gitverse.ru/ipushechnikov/terminal-launcher.git
+          fi
+          echo "Pushing to GitVerse..."
+          git push gitverse HEAD:main --force
+          echo "✓ Successfully pushed to GitVerse"
+      
+      - name: Summary
+        run: |
+          echo "## 🔄 Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ GitHub: Updated (trigger)" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔄 SourceCraft: ${{ job.status == 'success' && '✅ Synced' || '⚠️ Failed' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔄 GitVerse: ${{ job.status == 'success' && '✅ Synced' || '⚠️ Failed' }}" >> $GITHUB_STEP_SUMMARY
