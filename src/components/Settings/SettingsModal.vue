@@ -140,15 +140,17 @@ const checkForUpdates = async () => {
     const result = await window.electronAPI.checkForUpdates()
     
     if (result.success) {
-      // Уведомление появится автоматически через onUpdateAvailable
-      // Ждём немного чтобы показать пользователю что проверка идёт
+      // Ждём события от main process (update-available или update-not-available)
+      // Таймаут на случай если событие не придёт
       setTimeout(() => {
-        isChecking.value = false
-        lastCheckResult.value = {
-          type: 'info',
-          message: t('settings.checkComplete')
+        if (isChecking.value) {
+          isChecking.value = false
+          lastCheckResult.value = {
+            type: 'info',
+            message: t('settings.checkComplete')
+          }
         }
-      }, 2000)
+      }, 5000)
     } else {
       isChecking.value = false
       
@@ -174,6 +176,29 @@ const checkForUpdates = async () => {
     }
   }
 }
+
+// Подписка на события обновлений
+onMounted(() => {
+  // Когда обновление доступно - показываем через UpdateNotification компонент
+  window.electronAPI.onUpdateAvailable((info) => {
+    console.log('[Settings] Update available:', info.version)
+    isChecking.value = false
+    lastCheckResult.value = {
+      type: 'success',
+      message: `${t('update.available')}: ${info.version}`
+    }
+  })
+  
+  // Когда обновлений нет
+  window.electronAPI.onUpdateNotAvailable(() => {
+    console.log('[Settings] No updates available')
+    isChecking.value = false
+    lastCheckResult.value = {
+      type: 'success',
+      message: t('settings.noUpdatesAvailable')
+    }
+  })
+})
 
 onUnmounted(() => {
   cleanupLanguage()
