@@ -1,0 +1,11 @@
+# SourceCraft Sites Configuration
+# Статический сайт для Terminal Launcher
+
+site:
+  # Путь к директории с файлами сайта
+  # Можно указать папку docs/ или dist/ после сборки
+  root: "docs/site"
+  
+  # Ветка или тег для публикации
+  # Сайт обновляется автоматически при push в эту ветку
+  ref: "main"
