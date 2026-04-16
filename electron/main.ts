@@ -416,6 +416,14 @@ app.whenReady().then(() => {
     return { success: true };
   });
   
+  // Get app info
+  ipcMain.handle('get-app-info', () => {
+    return {
+      version: app.getVersion(),
+      electronVersion: process.versions.electron
+    };
+  });
+  
   // 8. Настраиваем автообновление (только в production)
   if (!app.isPackaged) {
     console.log('[MAIN] Dev mode - autoUpdater disabled');
@@ -423,11 +431,14 @@ app.whenReady().then(() => {
   }
   
   console.log('[MAIN] Setting up auto-updater...');
+  console.log('[MAIN] Current version:', app.getVersion());
+  console.log('[MAIN] GitHub repo: IgorPushechnikov/terminal-launcher');
   
-  // Проверяем обновления при запуске
-  autoUpdater.autoDownload = false; // Не скачиваем автоматически
-  autoUpdater.autoInstallOnAppQuit = true; // Устанавливаем при выходе
+  // Настройка для GitHub API
+  autoUpdater.autoDownload = false;
+  autoUpdater.autoInstallOnAppQuit = true;
   
+  // Логирование всех событий
   autoUpdater.on('checking-for-update', () => {
     console.log('[UPDATE] Checking for updates...');
     if (mainWindow) {
@@ -436,7 +447,8 @@ app.whenReady().then(() => {
   });
   
   autoUpdater.on('update-available', (info) => {
-    console.log('[UPDATE] Update available:', info.version);
+    console.log('[UPDATE] ✅ Update available:', info.version);
+    console.log('[UPDATE] Release date:', info.releaseDate);
     if (mainWindow) {
       mainWindow.webContents.send('update-available', {
         version: info.version,
@@ -447,14 +459,20 @@ app.whenReady().then(() => {
   });
   
   autoUpdater.on('update-not-available', (info) => {
-    console.log('[UPDATE] No updates available');
+    console.log('[UPDATE] ⏹️ No updates available');
+    console.log('[UPDATE] Current version:', app.getVersion());
     if (mainWindow) {
       mainWindow.webContents.send('update-not-available', true);
     }
   });
   
+  // Логирование всех ошибок для отладки
   autoUpdater.on('error', (err) => {
-    console.error('[UPDATE] Error:', err.message);
+    console.error('[UPDATE] ❌ Error:', err.message);
+    console.error('[UPDATE] Stack:', err.stack);
+    if (mainWindow) {
+      mainWindow.webContents.send('update-error', err.message);
+    }
   });
   
   autoUpdater.on('download-progress', (progressObj) => {

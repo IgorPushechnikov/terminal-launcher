@@ -61,6 +61,10 @@ export const translations: Translations = {
     ru: 'Справка (F1)',
     en: 'Help (F1)'
   },
+  'titlebar.about': {
+    ru: 'О программе',
+    en: 'About'
+  },
   
   // StatusBar
   'statusbar.import': {
@@ -318,6 +322,40 @@ export const translations: Translations = {
   'settings.devModeNoUpdates': {
     ru: 'Обновления доступны только в production версии',
     en: 'Updates are only available in production build'
+  },
+  
+  // About Modal
+  'about.version': {
+    ru: 'Версия',
+    en: 'Version'
+  },
+  'about.description': {
+    ru: 'Многовкладочный терминальный эмулятор с сохранением команд и сессий. Кроссплатформенное приложение для Windows, macOS и Linux.',
+    en: 'Multi-tab terminal emulator with saved commands and sessions. Cross-platform application for Windows, macOS, and Linux.'
+  },
+  'about.features': {
+    ru: 'Возможности:',
+    en: 'Features:'
+  },
+  'about.feature1': {
+    ru: 'Несколько вкладок терминала',
+    en: 'Multiple terminal tabs'
+  },
+  'about.feature2': {
+    ru: 'Сохранение сессий и команд',
+    en: 'Session and command persistence'
+  },
+  'about.feature3': {
+    ru: 'Темная и светлая темы',
+    en: 'Dark and light themes'
+  },
+  'about.feature4': {
+    ru: 'Автоматические обновления',
+    en: 'Automatic updates'
+  },
+  'about.checkUpdates': {
+    ru: 'Проверить обновления',
+    en: 'Check for Updates'
   },
   'settings.cancel': {
     ru: 'Отмена',

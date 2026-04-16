@@ -80,6 +80,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
   downloadUpdate: () => ipcRenderer.invoke('download-update'),
   installUpdate: () => ipcRenderer.invoke('install-update'),
+  getAppInfo: () => ipcRenderer.invoke('get-app-info'),
   
   // Update events
   onUpdateChecking: (callback: (checking: boolean) => void) => {

@@ -31,6 +31,14 @@
       >
         <IconQuestionMark :size="16" />
       </button>
+      <!-- About Button -->
+      <button 
+        class="titlebar-button about-button" 
+        @click="$emit('openAbout')"
+        :title="t('titlebar.about')"
+      >
+        <IconInfoCircle :size="16" />
+      </button>
       <!-- Window Controls -->
       <button 
         class="titlebar-button" 
@@ -63,7 +71,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { IconTerminal2, IconMinus, IconSquare, IconX, IconSun, IconMoon, IconQuestionMark } from '@tabler/icons-vue'
+import { IconTerminal2, IconMinus, IconSquare, IconX, IconSun, IconMoon, IconQuestionMark, IconInfoCircle } from '@tabler/icons-vue'
 import { getLanguage, setLanguage, useLanguage, type Language } from '../../i18n'
 
 const { t, cleanup: cleanupLanguage } = useLanguage()
@@ -79,6 +87,7 @@ defineEmits<{
   close: []
   toggleTheme: []
   openHelp: []
+  openAbout: []
 }>()
 
 // Language state

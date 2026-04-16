@@ -155,7 +155,9 @@
       "provider": "github",
       "owner": "IgorPushechnikov",
       "repo": "terminal-launcher",
-      "releaseType": "release"
+      "releaseType": "release",
+      "private": false,
+      "vPrefixedTagName": true
     }
   }
 }

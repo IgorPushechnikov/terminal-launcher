@@ -81,6 +81,7 @@ export interface ElectronAPI {
   checkForUpdates: () => Promise<{ success: boolean; error?: string }>;
   downloadUpdate: () => Promise<{ success: boolean; error?: string }>;
   installUpdate: () => Promise<{ success: boolean }>;
+  getAppInfo: () => Promise<{ version: string; electronVersion: string }>;
   
   onUpdateChecking: (callback: (checking: boolean) => void) => void;
   onUpdateAvailable: (callback: (info: { version: string; releaseNotes?: string | any[]; releaseDate?: string }) => void) => void;

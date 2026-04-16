@@ -8,6 +8,7 @@
         @close="handleClose"
         @toggle-theme="handleToggleTheme"
         @open-help="helpOpened = true"
+        @open-about="aboutOpened = true"
       />
       
       <div class="main-content">
@@ -27,6 +28,12 @@
       
       <!-- Update Notification -->
       <UpdateNotification />
+      
+      <!-- About Modal -->
+      <AboutModal
+        :opened="aboutOpened"
+        @close="aboutOpened = false"
+      />
     </div>
 </template>
 
@@ -38,12 +45,14 @@ import HomeView from './components/Layout/HomeView.vue'
 import StatusBar from './components/Layout/StatusBar.vue'
 import SettingsModal from './components/Settings/SettingsModal.vue'
 import HelpModal from './components/Help/HelpModal.vue'
+import AboutModal from './components/UI/AboutModal.vue'
 import UpdateNotification from './components/UI/UpdateNotification.vue'
 import { useTerminalStore } from './store/terminalStore'
 import type { TerminalTab } from './types'
 
 const settingsOpened = ref(false)
 const helpOpened = ref(false)
+const aboutOpened = ref(false)
 const isMaximized = ref(false)
 
 const store = useTerminalStore()
