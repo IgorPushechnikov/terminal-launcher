@@ -1,44 +1,12 @@
-name: Build & Release
+name: Build macOS Release
 
 on:
   push:
-    branches:
-      - main  # Автоматическая сборка при push в main
     tags:
-      - 'v*'  # Автоматическое создание Release при теге версии
+      - 'v*'  # Только при создании тега версии
   workflow_dispatch:  # Ручной запуск
 
 jobs:
-  build-windows:
-    name: Build Windows
-    runs-on: windows-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '25'
-          
-      - name: Install dependencies
-        run: npm install
-        
-      - name: Build Electron app
-        run: npm run electron:build:win
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Upload Windows artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-build
-          path: |
-            dist/Terminal-Launcher-*-Setup.exe
-            dist/Terminal-Launcher-*-Portable.exe
-          retention-days: 30
-
   build-macos:
     name: Build macOS
     runs-on: macos-latest
@@ -52,10 +20,18 @@ jobs:
         with:
           node-version: '25'
           
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+          
       - name: Install dependencies
         run: npm install
         
-      - name: Build Electron app
+      - name: Build Electron app for macOS
         run: npm run electron:build:mac
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -69,46 +45,18 @@ jobs:
             dist/Terminal-Launcher-*.zip
           retention-days: 30
 
-  build-linux:
-    name: Build Linux
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '25'
-          
-      - name: Install dependencies
-        run: npm install
-        
-      - name: Build Electron app
-        run: npm run electron:build:linux
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Upload Linux artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-build
-          path: |
-            dist/Terminal-Launcher-*.AppImage
-            dist/Terminal-Launcher-*.deb
-          retention-days: 30
-
   create-release:
     name: Create GitHub Release
-    needs: [build-windows, build-macos, build-linux]
+    needs: [build-macos]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     
     steps:
-      - name: Download all artifacts
+      - name: Download macOS artifacts
         uses: actions/download-artifact@v4
-        
+        with:
+          name: macos-build
+          
       - name: Display structure of downloaded files
         run: ls -R
         
@@ -116,12 +64,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            windows-build/Terminal-Launcher-*-Setup.exe
-            windows-build/Terminal-Launcher-*-Portable.exe
-            macos-build/Terminal-Launcher-*.dmg
-            macos-build/Terminal-Launcher-*.zip
-            linux-build/Terminal-Launcher-*.AppImage
-            linux-build/Terminal-Launcher-*.deb
+            Terminal-Launcher-*.dmg
+            Terminal-Launcher-*.zip
           draft: false
           prerelease: false
           generate_release_notes: true

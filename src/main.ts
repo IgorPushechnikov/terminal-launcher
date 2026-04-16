@@ -43,7 +43,8 @@ nextTick(() => {
   window.__getTabsState__ = () => {
     try {
       const store = useTerminalStore()
-      return store.tabs.map(t => ({ id: t.id, name: t.name }))
+      // Возвращаем только сериализуемые данные
+      return JSON.parse(JSON.stringify(store.tabs.map(t => ({ id: t.id, name: t.name }))))
     } catch (error) {
       console.error('[__getTabsState__] Ошибка:', error)
       return []
@@ -54,7 +55,9 @@ nextTick(() => {
     try {
       const store = useTerminalStore()
       // Команды хранятся в SQLite, возвращаем их из store для автосохранения сессии
-      return store.commands || null
+      // Сериализуем чтобы избежать ошибки "could not be cloned"
+      if (!store.commands || !Array.isArray(store.commands)) return null
+      return JSON.parse(JSON.stringify(store.commands))
     } catch (error) {
       console.error('[__getCommandsState__] Ошибка:', error)
       return null
