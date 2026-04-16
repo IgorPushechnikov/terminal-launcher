@@ -31,6 +31,10 @@ export const translations: Translations = {
     ru: 'Переключить на {0}',
     en: 'Switch to {0}'
   },
+  'common.close': {
+    ru: 'Закрыть',
+    en: 'Close'
+  },
   
   // TitleBar
   'titlebar.lightTheme': {
