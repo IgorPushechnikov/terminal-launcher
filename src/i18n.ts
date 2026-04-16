@@ -323,6 +323,10 @@ export const translations: Translations = {
     ru: 'Проверка завершена. Если есть обновление, появится уведомление.',
     en: 'Check complete. If update is available, notification will appear.'
   },
+  'settings.noUpdatesAvailable': {
+    ru: 'У вас установлена последняя версия',
+    en: 'You have the latest version'
+  },
   'settings.devModeNoUpdates': {
     ru: 'Обновления доступны только в production версии',
     en: 'Updates are only available in production build'

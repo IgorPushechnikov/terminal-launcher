@@ -1,4 +1,5 @@
 <template>
+  <!-- Update available notification -->
   <Transition name="update-slide">
     <div v-if="showUpdate" class="update-notification" :class="{ 'has-progress': downloadProgress > 0 }">
       <div class="update-content">
@@ -38,6 +39,22 @@
       </div>
     </div>
   </Transition>
+
+  <!-- No update available notification -->
+  <Transition name="update-slide">
+    <div v-if="showNoUpdate" class="update-notification no-update">
+      <div class="update-content">
+        <IconDownload :size="20" class="update-icon success" />
+        <div class="update-text">
+          <h4>{{ t('settings.checkComplete') }}</h4>
+          <p>{{ t('settings.noUpdatesAvailable') || 'You have the latest version' }}</p>
+        </div>
+        <button @click="showNoUpdate = false" class="btn-dismiss">
+          ✕
+        </button>
+      </div>
+    </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
@@ -49,6 +66,7 @@ const { t } = useLanguage()
 
 // State
 const showUpdate = ref(false)
+const showNoUpdate = ref(false)
 const updateVersion = ref('')
 const releaseNotes = ref('')
 const downloadProgress = ref(0)
@@ -107,6 +125,11 @@ onMounted(() => {
   
   window.electronAPI.onUpdateNotAvailable(() => {
     console.log('[UI] No updates available')
+    // Показываем уведомление что обновлений нет
+    showNoUpdate.value = true
+    setTimeout(() => {
+      showNoUpdate.value = false
+    }, 3000)
   })
   
   window.electronAPI.onUpdateDownloadProgress((percent) => {
@@ -144,6 +167,10 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
+.update-notification.no-update {
+  border-left: 4px solid #48bb78;
+}
+
 .update-content {
   display: flex;
   align-items: flex-start;
@@ -155,6 +182,10 @@ onUnmounted(() => {
   color: #667eea;
   flex-shrink: 0;
   margin-top: 2px;
+}
+
+.update-icon.success {
+  color: #48bb78;
 }
 
 .update-text {
