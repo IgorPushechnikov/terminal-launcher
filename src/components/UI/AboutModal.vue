@@ -10,7 +10,7 @@
           <!-- Logo and Title -->
           <div class="about-header">
             <div class="app-logo">
-              <IconTerminal2 :size="64" />
+              <img src="/assets/icons/terminal-icon.svg" alt="Terminal Launcher" />
             </div>
             <h1 class="app-name">Terminal Launcher</h1>
             <p class="app-version">{{ t('about.version') }} {{ appVersion }}</p>
@@ -189,13 +189,13 @@ const checkForUpdates = async () => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.app-logo img {
   width: 100px;
   height: 100px;
-  background: linear-gradient(135deg, var(--brand-primary), var(--brand-light));
-  border-radius: 20px;
-  margin-bottom: 1rem;
-  color: white;
-  box-shadow: 0 8px 24px rgba(107, 83, 230, 0.3);
+  filter: drop-shadow(0 8px 24px rgba(107, 83, 230, 0.3));
 }
 
 .app-name {
