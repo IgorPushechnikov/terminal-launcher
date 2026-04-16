@@ -57,8 +57,10 @@
 import { ref, computed, onMounted, onUnmounted, markRaw } from 'vue'
 import { IconSearch, IconChevronRight, IconRocket, IconLayoutDashboard, IconList, IconFolder, IconSettings, IconKeyboard, IconArrowsExchange, IconTool } from '@tabler/icons-vue'
 import BaseModal from '../UI/BaseModal.vue'
-import { t, getLanguage } from '../../i18n'
+import { useLanguage } from '../../i18n'
 import { helpContent } from '../../data/helpContent'
+
+const { t, lang, cleanup: cleanupLanguage } = useLanguage()
 
 // Маппинг иконок
 const iconMap: Record<string, any> = {
@@ -82,14 +84,13 @@ defineEmits<{
 
 const searchQuery = ref('')
 const expandedSections = ref<string[]>(['quickstart'])
-const currentLang = ref(getLanguage())
 
 // Filter sections based on search
 const filteredSections = computed(() => {
-  if (!searchQuery.value) return helpContent[currentLang.value]
+  if (!searchQuery.value) return helpContent[lang.value]
   
   const query = searchQuery.value.toLowerCase()
-  return helpContent[currentLang.value].filter(section => 
+  return helpContent[lang.value].filter(section => 
     section.title.toLowerCase().includes(query) ||
     section.content.toLowerCase().includes(query)
   )
@@ -105,16 +106,12 @@ const toggleSection = (id: string) => {
 }
 
 // Listen for language changes
-const updateLanguage = () => {
-  currentLang.value = getLanguage()
-}
-
 onMounted(() => {
-  window.addEventListener('language-changed', updateLanguage)
+  // No need for event listener - useLanguage handles reactivity
 })
 
 onUnmounted(() => {
-  window.removeEventListener('language-changed', updateLanguage)
+  cleanupLanguage()
 })
 </script>
 
