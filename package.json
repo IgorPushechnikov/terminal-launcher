@@ -1,6 +1,6 @@
 {
   "name": "terminal-launcher",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Multi-tab terminal launcher with saved commands - Vue 3 + Vite",
   "main": "dist-electron/main.js",
   "scripts": {
@@ -85,7 +85,7 @@
           ]
         }
       ],
-      "requestedExecutionLevel": "requireAdministrator"
+      "requestedExecutionLevel": "asInvoker"
     },
     "portable": {
       "artifactName": "Terminal-Launcher-${version}-Portable.exe",
@@ -93,7 +93,7 @@
     },
     "nsis": {
       "oneClick": false,
-      "perMachine": true,
+      "perMachine": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
@@ -103,7 +103,8 @@
       "runAfterFinish": true,
       "installerIcon": "build/icons/icon.ico",
       "uninstallerIcon": "build/icons/icon.ico",
-      "installerHeaderIcon": "build/icons/icon.ico"
+      "installerHeaderIcon": "build/icons/icon.ico",
+      "allowElevation": true
     },
     "linux": {
       "target": [
