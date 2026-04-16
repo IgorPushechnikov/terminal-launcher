@@ -24,6 +24,9 @@
         :opened="helpOpened"
         @close="helpOpened = false"
       />
+      
+      <!-- Update Notification -->
+      <UpdateNotification />
     </div>
 </template>
 
@@ -35,6 +38,7 @@ import HomeView from './components/Layout/HomeView.vue'
 import StatusBar from './components/Layout/StatusBar.vue'
 import SettingsModal from './components/Settings/SettingsModal.vue'
 import HelpModal from './components/Help/HelpModal.vue'
+import UpdateNotification from './components/UI/UpdateNotification.vue'
 import { useTerminalStore } from './store/terminalStore'
 import type { TerminalTab } from './types'
 

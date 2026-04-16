@@ -295,6 +295,26 @@ export const translations: Translations = {
     ru: 'Размер шрифта',
     en: 'Font size'
   },
+  'settings.updates': {
+    ru: 'Обновления',
+    en: 'Updates'
+  },
+  'settings.currentVersion': {
+    ru: 'Текущая версия',
+    en: 'Current version'
+  },
+  'settings.checkForUpdates': {
+    ru: 'Проверить обновления',
+    en: 'Check for updates'
+  },
+  'settings.checking': {
+    ru: 'Проверка...',
+    en: 'Checking...'
+  },
+  'settings.checkComplete': {
+    ru: 'Проверка завершена. Если есть обновление, появится уведомление.',
+    en: 'Check complete. If update is available, notification will appear.'
+  },
   'settings.cancel': {
     ru: 'Отмена',
     en: 'Cancel'
@@ -308,6 +328,10 @@ export const translations: Translations = {
   'errors.saveFailed': {
     ru: 'Не удалось сохранить настройки',
     en: 'Failed to save settings'
+  },
+  'errors.updateCheckFailed': {
+    ru: 'Ошибка проверки обновлений',
+    en: 'Update check failed'
   },
   'errors.componentError': {
     ru: 'Ошибка компонента',
@@ -408,6 +432,28 @@ export const translations: Translations = {
   'errors.deletingCommandError': {
     ru: 'Ошибка при удалении команды',
     en: 'Error while deleting command'
+  },
+
+  // Auto-updater
+  'update.available': {
+    ru: 'Доступно обновление',
+    en: 'Update available'
+  },
+  'update.readyToInstall': {
+    ru: 'Обновление готово к установке',
+    en: 'Update ready to install'
+  },
+  'update.downloading': {
+    ru: 'Скачивание обновления...',
+    en: 'Downloading update...'
+  },
+  'update.download': {
+    ru: 'Скачать',
+    en: 'Download'
+  },
+  'update.installAndRestart': {
+    ru: 'Установить и перезапустить',
+    en: 'Install & Restart'
   },
 
   // Logs

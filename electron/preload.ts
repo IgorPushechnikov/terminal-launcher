@@ -74,5 +74,27 @@ contextBridge.exposeInMainWorld('electronAPI', {
   windowIsMaximized: () => ipcRenderer.invoke('window-is-maximized'),
   
   // Language synchronization (one-way, no response needed)
-  syncLanguage: (language: 'ru' | 'en') => ipcRenderer.send('sync-language', language)
+  syncLanguage: (language: 'ru' | 'en') => ipcRenderer.send('sync-language', language),
+  
+  // Auto-updater
+  checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
+  downloadUpdate: () => ipcRenderer.invoke('download-update'),
+  installUpdate: () => ipcRenderer.invoke('install-update'),
+  
+  // Update events
+  onUpdateChecking: (callback: (checking: boolean) => void) => {
+    ipcRenderer.on('update-checking', (event, checking) => callback(checking));
+  },
+  onUpdateAvailable: (callback: (info: { version: string; releaseNotes?: string; releaseDate?: string }) => void) => {
+    ipcRenderer.on('update-available', (event, info) => callback(info));
+  },
+  onUpdateNotAvailable: (callback: (noUpdate: boolean) => void) => {
+    ipcRenderer.on('update-not-available', (event, noUpdate) => callback(noUpdate));
+  },
+  onUpdateDownloadProgress: (callback: (percent: number) => void) => {
+    ipcRenderer.on('update-download-progress', (event, percent) => callback(percent));
+  },
+  onUpdateDownloaded: (callback: (info: { version: string; releaseNotes?: string }) => void) => {
+    ipcRenderer.on('update-downloaded', (event, info) => callback(info));
+  }
 });

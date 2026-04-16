@@ -76,6 +76,17 @@ export interface ElectronAPI {
   
   // Language synchronization
   syncLanguage: (language: 'ru' | 'en') => void;
+  
+  // Auto-updater
+  checkForUpdates: () => Promise<{ success: boolean; error?: string }>;
+  downloadUpdate: () => Promise<{ success: boolean; error?: string }>;
+  installUpdate: () => Promise<{ success: boolean }>;
+  
+  onUpdateChecking: (callback: (checking: boolean) => void) => void;
+  onUpdateAvailable: (callback: (info: { version: string; releaseNotes?: string | any[]; releaseDate?: string }) => void) => void;
+  onUpdateNotAvailable: (callback: (noUpdate: boolean) => void) => void;
+  onUpdateDownloadProgress: (callback: (percent: number) => void) => void;
+  onUpdateDownloaded: (callback: (info: { version: string; releaseNotes?: string | any[] }) => void) => void;
 }
 
 declare global {

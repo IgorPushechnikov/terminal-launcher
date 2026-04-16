@@ -28,6 +28,26 @@
         />
       </div>
       
+      <!-- Auto-update section -->
+      <div class="form-group update-section">
+        <label>{{ t('settings.updates') }}</label>
+        <div class="update-info">
+          <span class="current-version">{{ t('settings.currentVersion') }}: {{ appVersion }}</span>
+          <button 
+            @click="checkForUpdates" 
+            class="btn-check-updates"
+            :disabled="isChecking"
+          >
+            <IconRefresh v-if="!isChecking" :size="16" />
+            <IconLoader2 v-else :size="16" class="spinning" />
+            {{ isChecking ? t('settings.checking') : t('settings.checkForUpdates') }}
+          </button>
+        </div>
+        <p v-if="lastCheckResult" class="update-status" :class="lastCheckResult.type">
+          {{ lastCheckResult.message }}
+        </p>
+      </div>
+      
       <div class="form-actions">
         <button class="btn-secondary" @click="$emit('close')">{{ t('settings.cancel') }}</button>
         <button class="btn-primary" @click="handleSave">{{ t('settings.save') }}</button>
@@ -37,11 +57,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onUnmounted } from 'vue'
+import { ref, watch, onUnmounted, onMounted } from 'vue'
 import BaseModal from '../UI/BaseModal.vue'
 import { useTerminalStore } from '../../store/terminalStore'
 import { useLanguage } from '../../i18n'
-import { IconFolderSearch } from '@tabler/icons-vue'
+import { IconFolderSearch, IconRefresh, IconLoader2 } from '@tabler/icons-vue'
 import { useToast } from '../../composables/useToast'
 
 const { t, cleanup: cleanupLanguage } = useLanguage()
@@ -56,6 +76,13 @@ const emit = defineEmits<{
 }>()
 
 const store = useTerminalStore()
+
+// App version
+const appVersion = ref('2.0.0') // TODO: Get from package.json
+
+// Update checking state
+const isChecking = ref(false)
+const lastCheckResult = ref<{ type: 'success' | 'info' | 'error'; message: string } | null>(null)
 
 const formData = ref({
   logDirectory: store.settings.logDirectory,
@@ -101,6 +128,41 @@ const selectLogDirectory = async () => {
     }
   } catch (error) {
     console.error('Ошибка выбора папки:', error)
+  }
+}
+
+const checkForUpdates = async () => {
+  try {
+    isChecking.value = true
+    lastCheckResult.value = null
+    
+    console.log('[UI] Manual update check triggered')
+    const result = await window.electronAPI.checkForUpdates()
+    
+    if (result.success) {
+      // Уведомление появится автоматически через onUpdateAvailable
+      // Ждём немного чтобы показать пользователю что проверка идёт
+      setTimeout(() => {
+        isChecking.value = false
+        lastCheckResult.value = {
+          type: 'info',
+          message: t('settings.checkComplete')
+        }
+      }, 2000)
+    } else {
+      isChecking.value = false
+      lastCheckResult.value = {
+        type: 'error',
+        message: `${t('errors.updateCheckFailed')}: ${result.error}`
+      }
+    }
+  } catch (error: any) {
+    console.error('[UI] Update check error:', error)
+    isChecking.value = false
+    lastCheckResult.value = {
+      type: 'error',
+      message: `${t('errors.updateCheckFailed')}: ${error.message}`
+    }
   }
 }
 
@@ -190,5 +252,81 @@ onUnmounted(() => {
   background: transparent;
   border: 1px solid var(--border-color);
   color: var(--text-color);
+}
+
+/* Update section styles */
+.update-section {
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.update-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.current-version {
+  font-size: 0.9em;
+  color: var(--text-secondary);
+}
+
+.btn-check-updates {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--brand-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-check-updates:hover:not(:disabled) {
+  background: #5568d3;
+  transform: translateY(-1px);
+}
+
+.btn-check-updates:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.update-status {
+  margin: 0.5rem 0 0 0;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.update-status.success {
+  background: rgba(72, 187, 120, 0.1);
+  color: #48bb78;
+  border: 1px solid rgba(72, 187, 120, 0.3);
+}
+
+.update-status.info {
+  background: rgba(66, 153, 225, 0.1);
+  color: #4299e1;
+  border: 1px solid rgba(66, 153, 225, 0.3);
+}
+
+.update-status.error {
+  background: rgba(245, 101, 101, 0.1);
+  color: #f56565;
+  border: 1px solid rgba(245, 101, 101, 0.3);
 }
 </style>

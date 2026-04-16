@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain, shell, dialog } from 'electron';
+import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import pty from 'node-pty';
 import fs from 'fs';
@@ -371,6 +372,104 @@ app.whenReady().then(() => {
   setImmediate(() => {
     initializeDefaultFiles();
   });
+  
+  // 7. Настраиваем автообновление (только в production)
+  if (!app.isPackaged) {
+    console.log('[MAIN] Dev mode - autoUpdater disabled');
+    return;
+  }
+  
+  console.log('[MAIN] Setting up auto-updater...');
+  
+  // Проверяем обновления при запуске
+  autoUpdater.autoDownload = false; // Не скачиваем автоматически
+  autoUpdater.autoInstallOnAppQuit = true; // Устанавливаем при выходе
+  
+  autoUpdater.on('checking-for-update', () => {
+    console.log('[UPDATE] Checking for updates...');
+    if (mainWindow) {
+      mainWindow.webContents.send('update-checking', true);
+    }
+  });
+  
+  autoUpdater.on('update-available', (info) => {
+    console.log('[UPDATE] Update available:', info.version);
+    if (mainWindow) {
+      mainWindow.webContents.send('update-available', {
+        version: info.version,
+        releaseNotes: info.releaseNotes,
+        releaseDate: info.releaseDate
+      });
+    }
+  });
+  
+  autoUpdater.on('update-not-available', (info) => {
+    console.log('[UPDATE] No updates available');
+    if (mainWindow) {
+      mainWindow.webContents.send('update-not-available', true);
+    }
+  });
+  
+  autoUpdater.on('error', (err) => {
+    console.error('[UPDATE] Error:', err.message);
+  });
+  
+  autoUpdater.on('download-progress', (progressObj) => {
+    const percent = Math.round(progressObj.percent);
+    console.log(`[UPDATE] Downloading: ${percent}%`);
+    if (mainWindow) {
+      mainWindow.webContents.send('update-download-progress', percent);
+    }
+  });
+  
+  autoUpdater.on('update-downloaded', (info) => {
+    console.log('[UPDATE] Update downloaded:', info.version);
+    if (mainWindow) {
+      mainWindow.webContents.send('update-downloaded', {
+        version: info.version,
+        releaseNotes: info.releaseNotes
+      });
+    }
+  });
+  
+  // IPC handler для проверки обновлений
+  ipcMain.handle('check-for-updates', async () => {
+    try {
+      console.log('[UPDATE] Manual check triggered');
+      await autoUpdater.checkForUpdates();
+      return { success: true };
+    } catch (error: any) {
+      console.error('[UPDATE] Check failed:', error.message);
+      return { success: false, error: error.message };
+    }
+  });
+  
+  // IPC handler для скачивания обновления
+  ipcMain.handle('download-update', async () => {
+    try {
+      console.log('[UPDATE] Download triggered');
+      await autoUpdater.downloadUpdate();
+      return { success: true };
+    } catch (error: any) {
+      console.error('[UPDATE] Download failed:', error.message);
+      return { success: false, error: error.message };
+    }
+  });
+  
+  // IPC handler для установки обновления
+  ipcMain.handle('install-update', () => {
+    console.log('[UPDATE] Install triggered - will install on quit');
+    autoUpdater.quitAndInstall();
+    return { success: true };
+  });
+  
+  // Автоматическая проверка при запуске (через 5 секунд)
+  setTimeout(() => {
+    console.log('[UPDATE] Auto-checking for updates...');
+    autoUpdater.checkForUpdates().catch(err => {
+      console.error('[UPDATE] Auto-check failed:', err.message);
+    });
+  }, 5000);
 });
 
 app.on('window-all-closed', async () => {

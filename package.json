@@ -31,6 +31,7 @@
     "@xterm/addon-fit": "^0.10.0",
     "@xterm/addon-search": "^0.15.0",
     "@xterm/xterm": "^5.5.0",
+    "electron-updater": "^6.8.3",
     "node-pty": "^1.1.0",
     "pinia": "^3.0.4",
     "sqlite3": "^6.0.1",
@@ -149,6 +150,12 @@
       ".terminal-manager/**/*",
       "build/icons/**/*",
       "package.json"
-    ]
+    ],
+    "publish": {
+      "provider": "github",
+      "owner": "IgorPushechnikov",
+      "repo": "terminal-launcher",
+      "releaseType": "release"
+    }
   }
 }
