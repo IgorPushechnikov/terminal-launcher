@@ -154,8 +154,11 @@ const checkForUpdates = async () => {
     } else {
       isChecking.value = false
       
+      console.log('[UI] Update check failed:', result)
+      
       // В dev режиме показываем специальное сообщение
-      if (result.error?.includes('development mode')) {
+      if (result.error && result.error.includes('development mode')) {
+        console.log('[UI] Showing dev mode message')
         lastCheckResult.value = {
           type: 'info',
           message: t('settings.devModeNoUpdates')
@@ -163,7 +166,7 @@ const checkForUpdates = async () => {
       } else {
         lastCheckResult.value = {
           type: 'error',
-          message: `${t('errors.updateCheckFailed')}: ${result.error}`
+          message: `${t('errors.updateCheckFailed')}: ${result.error || 'Unknown error'}`
         }
       }
     }
