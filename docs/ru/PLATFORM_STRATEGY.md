@@ -53,23 +53,27 @@
   - Largest community
 
 ### SourceCraft
-- **Роль**: Mirror + Russian audience
+- **Роль**: Mirror + Russian audience + Static site
 - **Аудитория**: Россия/СНГ
 - **Хранилище**: 2GB Git, 2GB LFS, 2GB артефакты
 - **CI/CD**: 1000 мин/мес, 5 параллельных задач
+- **Pages**: ✅ Статические сайты для репозиториев
 - **Особенности**:
   - ✅ **Встроенное зеркалирование из GitHub**
+  - ✅ **GitHub Pages аналог** (статические сайты)
   - Яндекс Cloud инфраструктура
   - Санкционно устойчивая платформа
 
 ### GitVerse
-- **Роль**: Mirror + Releases storage
+- **Роль**: Mirror + Releases storage + Static site
 - **Аудитория**: Россия/СНГ
 - **Хранилище**: Неограниченно Git, 2GB LFS, 4GB релизы ⭐
 - **CI/CD**: 1000 мин/мес
+- **Pages**: ✅ Статические сайты для репозиториев
 - **Особенности**:
   - ❓ Встроенное зеркалирование (нужно проверить)
-  - **4GB для релизов** (лучше чем GitHub 500MB)
+  - ✅ **4GB для релизов** (лучше чем GitHub 500MB)
+  - ✅ **Статические сайты** (аналог GitHub Pages)
   - GigaIDE Cloud интеграция
 
 ---
@@ -175,6 +179,15 @@ terminal-launcher/
 - **Задача**: Синхронизация кода в GitVerse
 - **Результат**: GitVerse обновлён
 
+#### 3. Deploy Documentation (опционально)
+- **Файл**: `.github/workflows/deploy-docs.yml` (создать)
+- **Триггер**: Push в main или изменения в `/docs`
+- **Задача**: Генерация и деплой статического сайта
+- **Результат**: 
+  - GitHub Pages: English docs
+  - SourceCraft Pages: Russian docs
+  - GitVerse Pages: Russian docs
+
 ### SourceCraft CI/CD
 - **Использование**: Тестирование, линтинг
 - **Минуты**: 1000 мин/мес
@@ -190,6 +203,42 @@ terminal-launcher/
   - Сборка Linux
   - Запуск тестов
   - Деплой на staging
+
+---
+
+## 🌐 Стратегия статических сайтов (Pages)
+
+Все три платформы поддерживают хостинг статических сайтов:
+
+### GitHub Pages
+- **URL**: `https://igorpushechnikov.github.io/terminal-launcher/`
+- **Источник**: Ветка `gh-pages` или папка `/docs`
+- **CI/CD**: Автоматический деплой через GitHub Actions
+- **Лимиты**: 1GB, 100GB bandwidth/мес
+- **Использование**: 
+  - Основная документация (English)
+  - Демо-страница приложения
+  - Changelog и release notes
+
+### SourceCraft Pages
+- **URL**: `https://ipushechnikov.sourcecraft.dev/terminal-launcher/` (примерный)
+- **Источник**: Ветка `gh-pages` или папка `/docs`
+- **CI/CD**: Автоматический деплой при push
+- **Лимиты**: Не указаны (в рамках 2GB артефактов)
+- **Использование**:
+  - Русская версия документации
+  - Зеркало основной документации
+  - Резервная копия сайта
+
+### GitVerse Pages
+- **URL**: `https://ipushechnikov.gitverse.ru/terminal-launcher/` (примерный)
+- **Источник**: Ветка `gh-pages` или папка `/docs`
+- **CI/CD**: Автоматический деплой при push
+- **Лимиты**: Не указаны
+- **Использование**:
+  - Русская версия документации
+  - Альтернативный доступ к документации
+  - Резервная копия сайта
 
 ---
 
