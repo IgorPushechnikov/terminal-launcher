@@ -19,7 +19,31 @@
 
 ## 📸 Screenshots
 
-> *Add application screenshots here*
+### Main Interface
+
+**Dark Theme:**
+![Main Screen Dark](docs/screenshots/01-main-screen-dark.png)
+*Multi-tab terminal workspace with command panel and active terminals*
+
+### In-App Help
+
+![Help Modal](docs/screenshots/02-help-modal-dark.png)
+*Built-in comprehensive help system with search functionality*
+
+### About
+
+![About Modal](docs/screenshots/03-about-modal-dark.png)
+*Application information with automatic updates check*
+
+### Command Management
+
+![Edit Command](docs/screenshots/04-edit-command-dark.png)
+*Easy command editing with name, command text, and working directory*
+
+### Light Theme
+
+![Main Screen Light](docs/screenshots/05-main-screen-light.png)
+*Clean light theme for comfortable work in bright environments*
 
 ## ✨ Features
 
