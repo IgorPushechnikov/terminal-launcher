@@ -151,9 +151,18 @@ const checkForUpdates = async () => {
       }, 2000)
     } else {
       isChecking.value = false
-      lastCheckResult.value = {
-        type: 'error',
-        message: `${t('errors.updateCheckFailed')}: ${result.error}`
+      
+      // В dev режиме показываем специальное сообщение
+      if (result.error?.includes('development mode')) {
+        lastCheckResult.value = {
+          type: 'info',
+          message: t('settings.devModeNoUpdates')
+        }
+      } else {
+        lastCheckResult.value = {
+          type: 'error',
+          message: `${t('errors.updateCheckFailed')}: ${result.error}`
+        }
       }
     }
   } catch (error: any) {

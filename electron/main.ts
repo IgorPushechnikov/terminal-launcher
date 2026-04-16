@@ -373,7 +373,50 @@ app.whenReady().then(() => {
     initializeDefaultFiles();
   });
   
-  // 7. Настраиваем автообновление (только в production)
+  // 7. Регистрируем IPC handlers для автообновления (всегда, даже в dev)
+  // Это позволяет тестировать UI без ошибок
+  ipcMain.handle('check-for-updates', async () => {
+    if (!app.isPackaged) {
+      console.log('[UPDATE] Dev mode - updates disabled');
+      return { success: false, error: 'Updates are disabled in development mode' };
+    }
+    
+    try {
+      console.log('[UPDATE] Manual check triggered');
+      await autoUpdater.checkForUpdates();
+      return { success: true };
+    } catch (error: any) {
+      console.error('[UPDATE] Check failed:', error.message);
+      return { success: false, error: error.message };
+    }
+  });
+  
+  ipcMain.handle('download-update', async () => {
+    if (!app.isPackaged) {
+      return { success: false, error: 'Updates are disabled in development mode' };
+    }
+    
+    try {
+      console.log('[UPDATE] Download triggered');
+      await autoUpdater.downloadUpdate();
+      return { success: true };
+    } catch (error: any) {
+      console.error('[UPDATE] Download failed:', error.message);
+      return { success: false, error: error.message };
+    }
+  });
+  
+  ipcMain.handle('install-update', () => {
+    if (!app.isPackaged) {
+      return { success: false };
+    }
+    
+    console.log('[UPDATE] Install triggered - will install on quit');
+    autoUpdater.quitAndInstall();
+    return { success: true };
+  });
+  
+  // 8. Настраиваем автообновление (только в production)
   if (!app.isPackaged) {
     console.log('[MAIN] Dev mode - autoUpdater disabled');
     return;
@@ -430,37 +473,6 @@ app.whenReady().then(() => {
         releaseNotes: info.releaseNotes
       });
     }
-  });
-  
-  // IPC handler для проверки обновлений
-  ipcMain.handle('check-for-updates', async () => {
-    try {
-      console.log('[UPDATE] Manual check triggered');
-      await autoUpdater.checkForUpdates();
-      return { success: true };
-    } catch (error: any) {
-      console.error('[UPDATE] Check failed:', error.message);
-      return { success: false, error: error.message };
-    }
-  });
-  
-  // IPC handler для скачивания обновления
-  ipcMain.handle('download-update', async () => {
-    try {
-      console.log('[UPDATE] Download triggered');
-      await autoUpdater.downloadUpdate();
-      return { success: true };
-    } catch (error: any) {
-      console.error('[UPDATE] Download failed:', error.message);
-      return { success: false, error: error.message };
-    }
-  });
-  
-  // IPC handler для установки обновления
-  ipcMain.handle('install-update', () => {
-    console.log('[UPDATE] Install triggered - will install on quit');
-    autoUpdater.quitAndInstall();
-    return { success: true };
   });
   
   // Автоматическая проверка при запуске (через 5 секунд)
