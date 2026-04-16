@@ -45,6 +45,11 @@
             </a>
           </div>
           
+          <!-- Update check result message -->
+          <div v-if="checkResult" class="update-result" :class="checkResult.type">
+            {{ checkResult.message }}
+          </div>
+          
           <!-- Copyright -->
           <div class="about-copyright">
             <p>© 2026 Igor Pushechnikov</p>
@@ -89,6 +94,7 @@ const electronVersion = ref('')
 const isChecking = ref(false)
 const isFirstLaunch = ref(false)
 const showOnStartup = ref(true)
+const checkResult = ref<{ type: string; message: string } | null>(null)
 
 onMounted(() => {
   // Get version info
@@ -114,16 +120,65 @@ const handleShowOnStartupChange = () => {
 }
 
 const checkForUpdates = async () => {
+  console.log('[About] === checkForUpdates CALLED ===')
   try {
     isChecking.value = true
-    await window.electronAPI.checkForUpdates()
+    checkResult.value = null
+    
+    console.log('[About] Manual update check triggered')
+    const result = await window.electronAPI.checkForUpdates()
+    
+    console.log('[About] Update check result:', result)
+    isChecking.value = false
+    
+    if (result.success) {
+      // В production режиме ждём события от autoUpdater
+      // Таймаут на случай если событие не придёт
+      setTimeout(() => {
+        if (isChecking.value === false && !checkResult.value) {
+          checkResult.value = {
+            type: 'info',
+            message: t('settings.checkComplete')
+          }
+          // Скрыть через 5 секунд
+          setTimeout(() => {
+            checkResult.value = null
+          }, 5000)
+        }
+      }, 5000)
+    } else {
+      console.log('[About] Update check failed:', result)
+      
+      // В dev режиме показываем специальное сообщение
+      if (result.error && result.error.includes('development mode')) {
+        console.log('[About] Showing dev mode message')
+        checkResult.value = {
+          type: 'info',
+          message: t('settings.devModeNoUpdates')
+        }
+      } else {
+        checkResult.value = {
+          type: 'error',
+          message: `${t('errors.updateCheckFailed')}: ${result.error || 'Unknown error'}`
+        }
+      }
+      
+      // Скрыть сообщение через 5 секунд
+      setTimeout(() => {
+        checkResult.value = null
+      }, 5000)
+    }
+  } catch (error: any) {
+    console.error('[About] Update check error:', error)
+    isChecking.value = false
+    checkResult.value = {
+      type: 'error',
+      message: `${t('errors.updateCheckFailed')}: ${error.message}`
+    }
     
     setTimeout(() => {
-      isChecking.value = false
-    }, 2000)
-  } catch (error) {
-    console.error('[About] Update check failed:', error)
-    isChecking.value = false
+      checkResult.value = null
+    }, 5000)
   }
 }
 </script>
@@ -287,6 +342,44 @@ const checkForUpdates = async () => {
 
 .separator {
   color: var(--text-muted);
+}
+
+.update-result {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.update-result.info {
+  background: rgba(107, 83, 230, 0.1);
+  color: var(--brand-primary);
+  border: 1px solid rgba(107, 83, 230, 0.3);
+}
+
+.update-result.success {
+  background: rgba(72, 187, 120, 0.1);
+  color: #48bb78;
+  border: 1px solid rgba(72, 187, 120, 0.3);
+}
+
+.update-result.error {
+  background: rgba(245, 101, 101, 0.1);
+  color: #f56565;
+  border: 1px solid rgba(245, 101, 101, 0.3);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .spinning {

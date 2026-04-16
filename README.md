@@ -2,9 +2,9 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-2.0.2-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)
+![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)
 ![Vue](https://img.shields.io/badge/Vue-3.5-brightgreen.svg)
 ![Electron](https://img.shields.io/badge/Electron-41.2-47848F.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6.svg)
@@ -54,9 +54,7 @@
 - 📋 **Command Library** - Save and organize frequently used commands
 - 🔍 **Terminal Search** - Quick search through terminal output
 - 📊 **Logging** - Automatic logging of all terminal sessions
-- 🌍 **Cross-Platform** - Works on Windows, macOS, and Linux
-- 📦 **Portable Version** - No installation required, run from USB
-- 🔄 **Import/Export Sessions** - Share configurations with your team
+- 📦 **Portable Version** - No installation required, run from anywhere
 
 ## 🚀 Quick Start
 
@@ -88,12 +86,10 @@ npm run electron:build
 
 ### For Usage
 - **Windows**: Windows 10 or later
-- **macOS**: macOS 10.15 (Catalina) or later
-- **Linux**: Any distribution with glibc 2.17+
 
 ### For Development
 - Node.js 18+ ([download](https://nodejs.org/))
-- npm or yarn
+- npm
 - Git
 
 ## 📥 Installation
@@ -107,30 +103,7 @@ npm run electron:build
 **Portable:**
 1. Download `Terminal-Launcher-{version}-Portable.exe`
 2. Run directly without installation
-
-### macOS
-
-**DMG:**
-1. Download `Terminal-Launcher-{version}.dmg`
-2. Open DMG and drag to Applications folder
-
-**Portable:**
-1. Download `Terminal-Launcher-{version}-mac.zip`
-2. Extract and run
-
-### Linux
-
-**AppImage (Recommended):**
-```bash
-chmod +x Terminal-Launcher-{version}.AppImage
-./Terminal-Launcher-{version}.AppImage
-```
-
-**DEB Package (Debian/Ubuntu):**
-```bash
-sudo dpkg -i terminal-launcher_{version}_amd64.deb
-sudo apt-get install -f  # if dependencies are missing
-```
+3. Data is stored in `.terminal-manager` folder next to the executable
 
 ## 📖 Documentation
 
@@ -199,20 +172,6 @@ Recommended `.gitignore`:
 | `Ctrl+F` | Search in terminal |
 | `F1` | **Open Help** |
 
-### 📖 In-App Help
-
-Press `F1` or click the **?** button in the title bar to access comprehensive help documentation directly within the application. The help is available in both Russian and English, automatically matching your selected interface language.
-
-**Help includes:**
-- Quick Start guide
-- Working with tabs
-- Command library management
-- Workspace configuration
-- Settings overview
-- Keyboard shortcuts reference
-- Import/Export instructions
-- Troubleshooting tips
-
 ## 📚 Documentation
 
 For more detailed information:
@@ -241,19 +200,9 @@ Settings are stored in `.terminal-manager/settings.json` in your workspace:
 }
 ```
 
-### Cross-Platform Considerations
-
-#### Default Shell
+### Default Shell
 
 - **Windows**: PowerShell
-- **macOS**: Zsh (or Bash)
-- **Linux**: Bash
-
-#### Default Fonts
-
-- **Windows**: Consolas
-- **macOS**: Menlo/Monaco
-- **Linux**: DejaVu Sans Mono
 
 ## 📂 Project Structure
 
@@ -289,11 +238,8 @@ terminal-launcher/
 |---------|-------------|
 | `npm run dev` | Run in development mode |
 | `npm run build` | Build Vue application |
-| `npm run electron:build` | Build for current platform |
-| `npm run electron:build:win` | Build for Windows |
-| `npm run electron:build:mac` | Build for macOS |
-| `npm run electron:build:linux` | Build for Linux |
-| `npm run electron:build:all` | Build for all platforms |
+| `npm run electron:build` | Build for Windows |
+| `npm run electron:build:win` | Build for Windows (explicit) |
 | `npm run preview` | Preview production build |
 
 ## 🐛 Troubleshooting
@@ -305,13 +251,12 @@ terminal-launcher/
 - Check logs in developer console (DevTools)
 
 **Terminal not working?**
-- Verify shell is installed on your system
-- Windows: PowerShell must be available
-- macOS/Linux: Bash or Zsh must be installed
+- Verify PowerShell is available on your system
+- Check if terminal emulator is properly initialized
 
 **Permission issues?**
-- Run as administrator (Windows)
-- Use `sudo` if necessary (Linux/macOS)
+- Application runs without administrator rights
+- Data is stored in user folder by default
 
 ### Enabling DevTools
 
@@ -340,7 +285,7 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 - Use TypeScript for all new code
 - Follow existing code style
 - Add comments for complex logic
-- Test on all supported platforms
+- Test on Windows
 - Update documentation when changing functionality
 
 ## ❓ FAQ

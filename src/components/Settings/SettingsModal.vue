@@ -132,12 +132,15 @@ const selectLogDirectory = async () => {
 }
 
 const checkForUpdates = async () => {
+  console.log('=== checkForUpdates CALLED ===')
   try {
     isChecking.value = true
     lastCheckResult.value = null
     
     console.log('[UI] Manual update check triggered')
     const result = await window.electronAPI.checkForUpdates()
+    
+    console.log('[UI] Update check result:', result)
     
     if (result.success) {
       // Ждём события от main process (update-available или update-not-available)
@@ -152,6 +155,7 @@ const checkForUpdates = async () => {
         }
       }, 5000)
     } else {
+      console.log('[UI] Update check failed, setting error message')
       isChecking.value = false
       
       console.log('[UI] Update check failed:', result)
@@ -163,12 +167,14 @@ const checkForUpdates = async () => {
           type: 'info',
           message: t('settings.devModeNoUpdates')
         }
+        console.log('[UI] Message set:', lastCheckResult.value.message)
       } else {
         lastCheckResult.value = {
           type: 'error',
           message: `${t('errors.updateCheckFailed')}: ${result.error || 'Unknown error'}`
         }
       }
+      console.log('[UI] Final lastCheckResult:', lastCheckResult.value)
     }
   } catch (error: any) {
     console.error('[UI] Update check error:', error)
@@ -180,27 +186,28 @@ const checkForUpdates = async () => {
   }
 }
 
-// Подписка на события обновлений
+// Подписка на события обновлений (только для production)
 onMounted(() => {
-  // Когда обновление доступно - показываем через UpdateNotification компонент
-  window.electronAPI.onUpdateAvailable((info) => {
-    console.log('[Settings] Update available:', info.version)
-    isChecking.value = false
-    lastCheckResult.value = {
-      type: 'success',
-      message: `${t('update.available')}: ${info.version}`
-    }
-  })
-  
-  // Когда обновлений нет
-  window.electronAPI.onUpdateNotAvailable(() => {
-    console.log('[Settings] No updates available')
-    isChecking.value = false
-    lastCheckResult.value = {
-      type: 'success',
-      message: t('settings.noUpdatesAvailable')
-    }
-  })
+  // В production режиме слушаем события от autoUpdater
+  if (window.electronAPI) {
+    window.electronAPI.onUpdateAvailable((info) => {
+      console.log('[Settings] Update available:', info.version)
+      isChecking.value = false
+      lastCheckResult.value = {
+        type: 'success',
+        message: `${t('update.available')}: ${info.version}`
+      }
+    })
+    
+    window.electronAPI.onUpdateNotAvailable(() => {
+      console.log('[Settings] No updates available')
+      isChecking.value = false
+      lastCheckResult.value = {
+        type: 'success',
+        message: t('settings.noUpdatesAvailable')
+      }
+    })
+  }
 })
 
 onUnmounted(() => {
