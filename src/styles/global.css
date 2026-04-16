@@ -19,6 +19,7 @@
   --bg-hover: rgba(255, 255, 255, 0.08);
   --border-color: #404040;
   --text-color: #e8e8e8;
+  --text-primary: #e8e8e8;  /* Alias for --text-color */
   --text-secondary: #b8b8b8;
   --text-muted: #888888;
   --input-bg: #2d2d2d;
@@ -39,6 +40,7 @@
   --bg-hover: rgba(255, 255, 255, 0.08);
   --border-color: #404040;
   --text-color: #d4d4d4;
+  --text-primary: #d4d4d4;  /* Alias for --text-color */
   --text-secondary: #b8b8b8;
   --text-muted: #888888;
   --input-bg: #2d2d2d;
@@ -59,6 +61,7 @@
   --bg-hover: rgba(0, 0, 0, 0.06);
   --border-color: #dee2e6;
   --text-color: #212529;
+  --text-primary: #212529;  /* Alias for --text-color */
   --text-secondary: #495057;
   --text-muted: #868e96;
   --input-bg: #ffffff;
