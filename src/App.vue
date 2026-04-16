@@ -146,7 +146,7 @@ const autoLoadLastSession = async () => {
 
 const handleKeyDown = (event: KeyboardEvent) => {
   // Игнорируем если модалки открыты
-  if (settingsOpened.value || helpOpened.value) return;
+  if (settingsOpened.value || helpOpened.value || aboutOpened.value) return;
   
   // F1 — Open Help
   if (event.key === 'F1' && !event.shiftKey) {
@@ -208,6 +208,8 @@ const handleKeyDown = (event: KeyboardEvent) => {
       helpOpened.value = false
     } else if (settingsOpened.value) {
       settingsOpened.value = false
+    } else if (aboutOpened.value) {
+      aboutOpened.value = false
     }
     return
   }
@@ -262,6 +264,14 @@ onMounted(async () => {
 
     // Загружаем команды из SQLite
     await loadCommandsFromSQLite()
+    
+    // Показываем окно About при первом запуске
+    const skipAbout = localStorage.getItem('skipAboutOnStartup')
+    if (!skipAbout) {
+      setTimeout(() => {
+        aboutOpened.value = true
+      }, 500)
+    }
   } catch (error) {
     console.error(translate('errors.initializationError'), ':', error)
     store.addTab()

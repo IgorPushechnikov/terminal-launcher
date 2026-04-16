@@ -50,6 +50,18 @@
             <p>© 2026 Igor Pushechnikov</p>
             <p class="electron-version">Electron {{ electronVersion }}</p>
           </div>
+          
+          <!-- Show on startup checkbox (only for first launch) -->
+          <div v-if="isFirstLaunch" class="show-on-startup">
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                v-model="showOnStartup" 
+                @change="handleShowOnStartupChange"
+              />
+              <span>{{ t('about.showOnStartup') }}</span>
+            </label>
+          </div>
         </div>
       </div>
     </div>
@@ -75,6 +87,8 @@ defineEmits<{
 const appVersion = ref('2.0.1')
 const electronVersion = ref('')
 const isChecking = ref(false)
+const isFirstLaunch = ref(false)
+const showOnStartup = ref(true)
 
 onMounted(() => {
   // Get version info
@@ -84,7 +98,20 @@ onMounted(() => {
       electronVersion.value = info.electronVersion || ''
     })
   }
+  
+  // Check if this is first launch
+  const skipAbout = localStorage.getItem('skipAboutOnStartup')
+  isFirstLaunch.value = !skipAbout
+  showOnStartup.value = skipAbout !== 'true'
 })
+
+const handleShowOnStartupChange = () => {
+  if (!showOnStartup.value) {
+    localStorage.setItem('skipAboutOnStartup', 'true')
+  } else {
+    localStorage.removeItem('skipAboutOnStartup')
+  }
+}
 
 const checkForUpdates = async () => {
   try {
@@ -290,6 +317,33 @@ const checkForUpdates = async () => {
 .electron-version {
   font-family: monospace;
   font-size: 0.75rem !important;
+}
+
+.show-on-startup {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--brand-primary);
+}
+
+.checkbox-label:hover {
+  color: var(--text-primary);
 }
 
 /* Transitions */

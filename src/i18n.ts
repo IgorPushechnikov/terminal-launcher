@@ -357,6 +357,10 @@ export const translations: Translations = {
     ru: 'Проверить обновления',
     en: 'Check for Updates'
   },
+  'about.showOnStartup': {
+    ru: 'Показывать при запуске',
+    en: 'Show on startup'
+  },
   'settings.cancel': {
     ru: 'Отмена',
     en: 'Cancel'
