@@ -1,46 +1,49 @@
-name: Sync to GitVerse Mirror
-
-on:
-  push:
-    branches: [main, master]
-  workflow_dispatch:  # Ручной запуск
-
-jobs:
-  sync-to-gitverse:
-    name: Sync to GitVerse
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Получаем всю историю
-      
-      - name: Configure Git
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-      
-      - name: Add GitVerse remote
-        run: |
-          git remote add gitverse https://gitverse.ru/ipushechnikov/terminal-launcher.git
-      
-      - name: Push to GitVerse
-        continue-on-error: true
-        env:
-          GITVERSE_TOKEN: ${{ secrets.GITVERSE_TOKEN }}
-        run: |
-          if [ -n "$GITVERSE_TOKEN" ]; then
-            git remote set-url gitverse https://ipushechnikov:${GITVERSE_TOKEN}@gitverse.ru/ipushechnikov/terminal-launcher.git
-          fi
-          echo "Pushing to GitVerse..."
-          git push gitverse HEAD:main --force
-          echo "✓ Successfully pushed to GitVerse"
-      
-      - name: Summary
-        run: |
-          echo "## 🔄 Sync Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ GitHub: Updated (trigger)" >> $GITHUB_STEP_SUMMARY
-          echo "- ℹ️ SourceCraft: Auto-synced via built-in mirroring" >> $GITHUB_STEP_SUMMARY
-          echo "- 🔄 GitVerse: ${{ job.status == 'success' && '✅ Synced' || '⚠️ Failed' }}" >> $GITHUB_STEP_SUMMARY
+# NOTE: Этот workflow закомментирован, так как GitVerse не поддерживает автоматическую синхронизацию
+# Используйте ручные скрипты scripts/sync-repos.bat или scripts/sync-repos.sh для синхронизации с GitVerse
+#
+# name: Sync to GitVerse Mirror
+#
+# on:
+#   push:
+#     branches: [main, master]
+#   workflow_dispatch:
+#
+# jobs:
+#   sync-to-gitverse:
+#     name: Sync to GitVerse
+#     runs-on: ubuntu-latest
+#     
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0
+#       
+#       - name: Configure Git
+#         run: |
+#           git config --global user.name "GitHub Actions"
+#           git config --global user.email "actions@github.com"
+#       
+#       - name: Add GitVerse remote
+#         run: |
+#           git remote add gitverse https://gitverse.ru/ipushechnikov/terminal-launcher.git
+#       
+#       - name: Push to GitVerse
+#         continue-on-error: true
+#         env:
+#           GITVERSE_TOKEN: ${{ secrets.GITVERSE_TOKEN }}
+#         run: |
+#           if [ -n "$GITVERSE_TOKEN" ]; then
+#             git remote set-url gitverse https://ipushechnikov:${GITVERSE_TOKEN}@gitverse.ru/ipushechnikov/terminal-launcher.git
+#           fi
+#           echo "Pushing to GitVerse..."
+#           git push gitverse HEAD:main --force
+#           echo "✓ Successfully pushed to GitVerse"
+#       
+#       - name: Summary
+#         run: |
+#           echo "## 🔄 Sync Summary" >> $GITHUB_STEP_SUMMARY
+#           echo "" >> $GITHUB_STEP_SUMMARY
+#           echo "- ✅ GitHub: Updated (trigger)" >> $GITHUB_STEP_SUMMARY
+#           echo "- ℹ️ SourceCraft: Auto-synced via built-in mirroring" >> $GITHUB_STEP_SUMMARY
+#           echo "- ⚠️ GitVerse: Manual sync required (use scripts/sync-repos.bat)" >> $GITHUB_STEP_SUMMARY
