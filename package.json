@@ -70,6 +70,12 @@
       "node_modules/node-pty/**/*",
       "node_modules/sqlite3/**/*"
     ],
+    "publish": {
+      "provider": "github",
+      "owner": "IgorPushechnikov",
+      "repo": "terminal-launcher",
+      "releaseType": "release"
+    },
     "win": {
       "target": [
         {

@@ -157,9 +157,16 @@ const checkForUpdates = async () => {
           message: t('settings.devModeNoUpdates')
         }
       } else {
+        // В production режиме показываем понятное сообщение
+        const errorMsg = result.error || 'Unknown error'
+        // Если ошибка слишком длинная (CSP или HTML), показываем краткое сообщение
+        const shortError = errorMsg.length > 200 
+          ? t('errors.updateCheckFailed')
+          : `${t('errors.updateCheckFailed')}: ${errorMsg}`
+        
         checkResult.value = {
           type: 'error',
-          message: `${t('errors.updateCheckFailed')}: ${result.error || 'Unknown error'}`
+          message: shortError
         }
       }
       
