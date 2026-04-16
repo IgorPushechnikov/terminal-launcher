@@ -553,8 +553,10 @@ app.on('window-all-closed', async () => {
       
       // CRITICAL: Add timeout to prevent hanging if renderer is unresponsive
       const savePromise = saveSessionState();
+      // Shorter timeout in dev mode (1s), longer in production (3s)
+      const timeoutMs = process.env.NODE_ENV === 'development' ? 1000 : 3000;
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Save timed out after 2 seconds')), 2000)
+        setTimeout(() => reject(new Error(`Save timed out after ${timeoutMs}ms`)), timeoutMs)
       );
       
       await Promise.race([savePromise, timeoutPromise]);
